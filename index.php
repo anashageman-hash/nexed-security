@@ -24,6 +24,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;
         $_SESSION['user'] = $user;
+        $_SESSION['id'] = $user['id'];
 
         header("location: dashboard.php");
     } else {
