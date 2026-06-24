@@ -12,29 +12,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // kwetsbaar voor SQL injectie
-    $sql = "SELECT * FROM user WHERE username = ? AND password = ?";
-    $result = $pdo->prepare($sql);
-    $result->execute([$username, $password]);
-    $user = $result->fetch();
+        $stmt = $pdo->prepare("SELECT * FROM user WHERE username = ?");
+    $stmt->execute([$username]);
 
-    // Controleer of er een rij is gevonden
-    if($result->rowCount() > 0) {
-        // Gebruiker is ingelogd
+$user = $stmt->fetch();
+
+if ($user && password_verify($password, $user['password'])) {
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;
         $_SESSION['user'] = $user;
-        $_SESSION['id'] = $user['id'];
 
         header("location: dashboard.php");
+        exit;
     } else {
-        // Gebruiker is niet ingelogd
         $error = "Gebruikersnaam of wachtwoord is onjuist";
     }
 
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="nl">
