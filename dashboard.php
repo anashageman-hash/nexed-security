@@ -11,6 +11,18 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true){
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $ontvanger = $_POST['ontvanger'];
     $bedrag = $_POST['bedrag'];
+    $omschrijving = trim($_POST['omschrijving']);
+
+    // Data validatie
+    if (!is_numeric($bedrag)) {
+        $error = "Voer een geldig bedrag in.";
+    } elseif ($bedrag <= 0) {
+        $error = "Het bedrag moet groter zijn dan 0.";
+    } elseif (empty($omschrijving)) {
+        $error = "Vul een omschrijving in.";
+    }
+    
+if (!isset($error)) {
 
     // Controleer of de ontvanger bestaat
     $stmt = $pdo->prepare("SELECT * FROM user WHERE username = ?");
@@ -18,6 +30,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $ontvanger = $stmt->fetch();
 
     if($stmt->rowCount() == 1) {
+
+        if($stmt->rowCount() == 1) {
         // Controleer of de gebruiker genoeg saldo heeft
         if($_SESSION['user']['balance'] >= $bedrag) {
             // Zet de transactie in de database
@@ -58,13 +72,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 }
 
-include 'includes/db.php';
+include 'includes/db.php';    }
+}
 
-// Haal het saldo van de ingelogde gebruiker op
-$stmt = $pdo->prepare("SELECT balance FROM user WHERE id = ?");
-$stmt->execute([$_SESSION['user']['id']]);
-$saldo = $stmt->fetchColumn();
-?>
+    // Haal het saldo van de ingelogde gebruiker op
+    $stmt = $pdo->prepare("SELECT balance FROM user WHERE id = ?");
+    $stmt->execute([$_SESSION['user']['id']]);
+    $saldo = $stmt->fetchColumn();
+    ?>
 
 <!DOCTYPE html>
 <html lang="nl">
