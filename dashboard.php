@@ -69,14 +69,18 @@ if (!isset($error)) {
     } else {
         $error = "Deze gebruiker bestaat niet";
     }
+
+}
+
+include 'includes/db.php';    
     }
+}
 
     // Haal het saldo van de ingelogde gebruiker op
     $stmt = $pdo->prepare("SELECT balance FROM user WHERE id = ?");
     $stmt->execute([$_SESSION['user']['id']]);
     $saldo = $stmt->fetchColumn();
-    
-?>
+    ?>
 
 <!DOCTYPE html>
 <html lang="nl">
