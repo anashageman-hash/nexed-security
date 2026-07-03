@@ -17,22 +17,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $user = $stmt->fetch();
 
-if ($user && $password == $user['password']) {
+if ($user && password_verify($password, $user['password'])) {
     $_SESSION['loggedin'] = true;
-    $_SESSION['id'] = $user['id'];          
+    $_SESSION['id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['user'] = $user;
 
     header("location: dashboard.php");
     exit;
 } else {
-    $error = "Gebruikersnaam of wachtwoord is onjuist";
+    $error = "Ongeldige gebruikersnaam of wachtwoord.";
 }
-
 }
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="nl">
